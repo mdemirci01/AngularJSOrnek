@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<body>
+<div ng-app="myApp" ng-controller="myCtrl">
+    <input type="text" ng-model="search">
+    <table border="1">
+        <tr>
+            <th>Ad</th><th>Soyad</th><th>Telefon</th><th>Maaş</th>
+        </tr>
+
+        <tr ng-repeat="item in records | orderBy:'firstName' | filter:search">
+            <td>{{item.firstName}}</td><td>{{item.lastName}}</td><td>{{item.phone}}</td><td>{{item.salary | currency}}</td>
+        </tr>
+    </table>
+    <h1>Vizyon</h1>
+    <p>Her değer insana değer.</p>
+    {{imza | trusted}}
+</div>
+<script>
+    var app = angular.module("myApp", []);
+
+    app.filter('trusted', ['$sce', function($sce){
+        var div = document.createElement('div');
+        return function(text) {
+            div.innerHTML = text;
+            return $sce.trustAsHtml(div.textContent);
+        };
+    }]);
+
+    app.controller("myCtrl", function($scope, $http) {
+        $http.get("/Home/GetStudents").then(function (response) {
+            $scope.records = response.data;
+        });
+        $http.get("partial.html").then(function(response) {
+            $scope.imza = response.data;
+        });
+    });
+</script>
+</body>
+</html>
