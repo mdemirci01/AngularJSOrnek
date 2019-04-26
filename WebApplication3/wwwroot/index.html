@@ -29,7 +29,7 @@
     }]);
 
     app.controller("myCtrl", function($scope, $http) {
-        $http.get("/Home/GetStudents").then(function (response) {
+        $http.post("/Home/GetStudents").then(function (response) {
             $scope.records = response.data;
         });
         $http.get("partial.html").then(function(response) {
